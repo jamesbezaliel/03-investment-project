@@ -1,9 +1,9 @@
-import { useState } from "react";
-import Input from "./components/input";
-import Result from "./components/Result";
 import Header from "./components/Header";
+import Result from "./components/Result";
+import UserInput from "./components/UserInput";
+import { useState } from "react";
 
-const initialInputData = {
+const INPUT_DATA = {
   initialInvestment: 15000,
   annualInvestment: 1200,
   expectedReturn: 6,
@@ -11,25 +11,25 @@ const initialInputData = {
 };
 
 function App() {
-  const [userInput, setUserInput] = useState(initialInputData);
+  const [inputUserData, setInputUserData] = useState(INPUT_DATA);
+  const isValidInput = inputUserData.duration > 0;
 
-  const isValidData = userInput.duration > 0;
-
-  function handleData(event, field) {
-    setUserInput((prevData) => ({
-      ...prevData,
-      // [field]: Number(event.target.value),
-      // or
-      [field]: +event.target.value,
+  function handleChangeInput(event, field) {
+    setInputUserData((prevInputData) => ({
+      ...prevInputData,
+      [field]: Number(event.target.value),
     }));
-    // event.target.value will always return string, so if you want to do calculations later, convert it to number
   }
+
   return (
     <>
       <Header />
-      <Input userInput={userInput} handleData={handleData} />
-      {!isValidData && <p className="center">Please enter duration more than zero</p>}
-      {isValidData && <Result userInput={userInput} />}
+      <UserInput
+        inputData={inputUserData}
+        handleChangeInput={handleChangeInput}
+      />
+      {!isValidInput && <p className="center">Duration must be greater than 0.</p>}
+      {isValidInput && <Result userInput={inputUserData} />}
     </>
   );
 }
